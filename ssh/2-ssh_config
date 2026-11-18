@@ -1,0 +1,5 @@
+# SSH client configuration: always use the private key ~/.ssh/school
+# and refuse to authenticate with a password
+Host *
+    IdentityFile ~/.ssh/school
+    PasswordAuthentication no
