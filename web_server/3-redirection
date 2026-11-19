@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Installs Nginx and makes /redirect_me return a 301 redirect
+apt-get -y update
+apt-get -y install nginx
+echo "Holberton School" > /var/www/html/index.html
+if ! grep -q "redirect_me" /etc/nginx/sites-available/default
+then
+  sed -i 's|server_name _;|server_name _;\n\trewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;|' /etc/nginx/sites-available/default
+fi
+service nginx restart
