@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Configures Nginx so every response has an X-Served-By header with the server's hostname
+apt-get -y update
+apt-get -y install nginx
+echo "Holberton School" > /var/www/html/index.html
+[ -f /var/www/html/404.html ] || echo "Ceci n'est pas une page" > /var/www/html/404.html
+FILE=/etc/nginx/sites-available/default
+if ! grep -q "redirect_me" "$FILE"
+then
+  sed -i 's|server_name _;|server_name _;\n\trewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;|' "$FILE"
+fi
+if ! grep -q "error_page 404" "$FILE"
+then
+  sed -i 's|server_name _;|server_name _;\n\terror_page 404 /404.html;|' "$FILE"
+fi
+if ! grep -q "X-Served-By" "$FILE"
+then
+  sed -i "s|server_name _;|server_name _;\n\tadd_header X-Served-By $HOSTNAME;|" "$FILE"
+fi
+service nginx restart
